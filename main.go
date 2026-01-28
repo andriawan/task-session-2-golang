@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"category-crud/config"
+	"category-crud/db"
 	_ "category-crud/docs"
 )
 
@@ -23,7 +24,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Default().Println(config)
+	db, err := db.Configure(*config)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
 	store := NewCategoryStore()
 	r := SetupRoutes(store)
 
