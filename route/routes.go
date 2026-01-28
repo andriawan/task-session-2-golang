@@ -1,6 +1,7 @@
-package main
+package route
 
 import (
+	"category-crud/store"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -8,7 +9,7 @@ import (
 )
 
 // SetupRoutes configures all API routes
-func SetupRoutes(store *CategoryStore) *mux.Router {
+func Configure(store *store.CategoryStore) *mux.Router {
 	r := mux.NewRouter()
 
 	// Root route - redirect to Swagger
