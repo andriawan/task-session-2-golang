@@ -1,7 +1,7 @@
 package route
 
 import (
-	"category-crud/store"
+	"category-crud/handler"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -9,7 +9,7 @@ import (
 )
 
 // SetupRoutes configures all API routes
-func Configure(store *store.CategoryStore) *mux.Router {
+func Configure(handlerGroup *handler.HandlerGroup) *mux.Router {
 	r := mux.NewRouter()
 
 	// Root route - redirect to Swagger
@@ -18,11 +18,18 @@ func Configure(store *store.CategoryStore) *mux.Router {
 	}).Methods("GET")
 
 	// Category endpoints
-	r.HandleFunc("/categories", store.CreateCategory).Methods("POST")
-	r.HandleFunc("/categories", store.ListCategories).Methods("GET")
-	r.HandleFunc("/categories/{id}", store.GetCategory).Methods("GET")
-	r.HandleFunc("/categories/{id}", store.UpdateCategory).Methods("PUT")
-	r.HandleFunc("/categories/{id}", store.DeleteCategory).Methods("DELETE")
+	r.HandleFunc("/categories", handlerGroup.Category.Create).Methods("POST")
+	r.HandleFunc("/categories", handlerGroup.Category.GetAll).Methods("GET")
+	r.HandleFunc("/categories/{id}", handlerGroup.Category.GetByID).Methods("GET")
+	r.HandleFunc("/categories/{id}", handlerGroup.Category.Update).Methods("PUT")
+	r.HandleFunc("/categories/{id}", handlerGroup.Category.Delete).Methods("DELETE")
+
+	// Product endpoints
+	r.HandleFunc("/products", handlerGroup.Product.Create).Methods("POST")
+	r.HandleFunc("/products", handlerGroup.Product.GetAll).Methods("GET")
+	r.HandleFunc("/products/{id}", handlerGroup.Product.GetByID).Methods("GET")
+	r.HandleFunc("/products/{id}", handlerGroup.Product.Update).Methods("PUT")
+	r.HandleFunc("/products/{id}", handlerGroup.Product.Delete).Methods("DELETE")
 
 	// Swagger documentation
 	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)

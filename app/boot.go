@@ -3,8 +3,11 @@ package app
 import (
 	"category-crud/config"
 	"category-crud/db"
+	"category-crud/handler"
+	"category-crud/repository"
 	"category-crud/route"
-	"category-crud/store"
+	"category-crud/service"
+	"database/sql"
 	"log"
 	"net/http"
 )
@@ -20,6 +23,8 @@ import (
 // @license.name MIT
 // @license.url https://opensource.org/licenses/MIT
 
+
+
 func Start() {
 	config, err := config.Load()
 	if err != nil {
@@ -30,11 +35,30 @@ func Start() {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	store := store.NewCategoryStore()
-	r := route.Configure(store)
+	handlerGroup := &handler.HandlerGroup{
+		Product:  setupProduct(db),
+		Category: setupCategory(db),
+	}
+	r := route.Configure(handlerGroup)
 
 	port := config.Server.Port
 	log.Println("Server starting on :" + port)
 	log.Println("Swagger documentation available at http://localhost:8080/swagger/index.html")
 	log.Fatal(http.ListenAndServe(":"+port, r))
+}
+
+func setupProduct(db *sql.DB) *handler.ProductHandler {
+	productRepo := repository.NewProductRepository(db)
+	productService := service.NewProductService(productRepo)
+	productHandler := handler.NewProductHandler(productService)
+
+	return productHandler
+}
+
+func setupCategory(db *sql.DB) *handler.CategoryHandler {
+	categoryRepo := repository.NewCategoryRepository(db)
+	categoryService := service.NewCategoryService(categoryRepo)
+	categoryHandler := handler.NewCategoryHandler(categoryService)
+
+	return categoryHandler
 }
