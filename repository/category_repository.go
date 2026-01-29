@@ -17,7 +17,7 @@ func NewCategoryRepository(db *sql.DB) *CategoryRepository {
 }
 
 func (repo *CategoryRepository) GetAll() ([]model.Category, error) {
-	query := "SELECT id, name, price, stock FROM categories"
+	query := "SELECT id, name, description FROM categories"
 	rows, err := repo.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -27,7 +27,7 @@ func (repo *CategoryRepository) GetAll() ([]model.Category, error) {
 	categories := make([]model.Category, 0)
 	for rows.Next() {
 		var p model.Category
-		err := rows.Scan(&p.ID, &p.Name, &p.Name, &p.Description)
+		err := rows.Scan(&p.ID, &p.Name, &p.Description)
 		if err != nil {
 			return nil, err
 		}
@@ -38,14 +38,14 @@ func (repo *CategoryRepository) GetAll() ([]model.Category, error) {
 }
 
 func (repo *CategoryRepository) Create(category *model.Category) error {
-	query := "INSERT INTO categories (name, description) VALUES ($1, $2, $3) RETURNING id"
+	query := "INSERT INTO categories (name, description) VALUES ($1, $2) RETURNING id"
 	err := repo.db.QueryRow(query, category.Name, category.Description).Scan(&category.ID)
 	return err
 }
 
 // GetByID - ambil kategori by ID
 func (repo *CategoryRepository) GetByID(id int) (*model.Category, error) {
-	query := "SELECT id, name, price, stock FROM categories WHERE id = $1"
+	query := "SELECT id, name, description FROM categories WHERE id = $1"
 
 	var p model.Category
 	err := repo.db.QueryRow(query, id).Scan(&p.ID, &p.Name, &p.Description)
@@ -59,9 +59,9 @@ func (repo *CategoryRepository) GetByID(id int) (*model.Category, error) {
 	return &p, nil
 }
 
-func (repo *CategoryRepository) Update(product *model.Category) error {
-	query := "UPDATE categories SET name = $1, price = $2, stock = $3 WHERE id = $4"
-	result, err := repo.db.Exec(query, product.Name, product.Description)
+func (repo *CategoryRepository) Update(category *model.Category) error {
+	query := "UPDATE categories SET name = $1, description = $2 WHERE id = $4"
+	result, err := repo.db.Exec(query, category.Name, category.Description)
 	if err != nil {
 		return err
 	}
