@@ -18,18 +18,18 @@ func Configure(handlerGroup *handler.HandlerGroup) *mux.Router {
 	}).Methods("GET")
 
 	// Category endpoints
-	r.HandleFunc("/categories", handlerGroup.Category.Create).Methods("POST")
-	r.HandleFunc("/categories", handlerGroup.Category.GetAll).Methods("GET")
-	r.HandleFunc("/categories/{id}", handlerGroup.Category.GetByID).Methods("GET")
-	r.HandleFunc("/categories/{id}", handlerGroup.Category.Update).Methods("PUT")
-	r.HandleFunc("/categories/{id}", handlerGroup.Category.Delete).Methods("DELETE")
+	r.HandleFunc("/api/categories", handlerGroup.Category.Create).Methods("POST")
+	r.HandleFunc("/api/categories", handlerGroup.Category.GetAll).Methods("GET")
+	r.HandleFunc("/api/categories/{id}", handlerGroup.Category.GetByID).Methods("GET")
+	r.HandleFunc("/api/categories/{id}", handlerGroup.Category.Update).Methods("PUT")
+	r.HandleFunc("/api/categories/{id}", handlerGroup.Category.Delete).Methods("DELETE")
 
 	// Product endpoints
-	r.HandleFunc("/products", handlerGroup.Product.Create).Methods("POST")
-	r.HandleFunc("/products", handlerGroup.Product.GetAll).Methods("GET")
-	r.HandleFunc("/products/{id}", handlerGroup.Product.GetByID).Methods("GET")
-	r.HandleFunc("/products/{id}", handlerGroup.Product.Update).Methods("PUT")
-	r.HandleFunc("/products/{id}", handlerGroup.Product.Delete).Methods("DELETE")
+	r.HandleFunc("/api/products", handlerGroup.Product.Create).Methods("POST")
+	r.HandleFunc("/api/products", handlerGroup.Product.GetAll).Methods("GET")
+	r.HandleFunc("/api/products/{id}", handlerGroup.Product.GetByID).Methods("GET")
+	r.HandleFunc("/api/products/{id}", handlerGroup.Product.Update).Methods("PUT")
+	r.HandleFunc("/api/products/{id}", handlerGroup.Product.Delete).Methods("DELETE")
 
 	// Swagger documentation
 	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
