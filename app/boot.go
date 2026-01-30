@@ -8,6 +8,7 @@ import (
 	"category-crud/route"
 	"category-crud/service"
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -22,8 +23,6 @@ import (
 
 // @license.name MIT
 // @license.url https://opensource.org/licenses/MIT
-
-
 
 func Start() {
 	config, err := config.Load()
@@ -42,8 +41,8 @@ func Start() {
 	r := route.Configure(handlerGroup)
 
 	port := config.Server.Port
-	log.Println("Server starting on :" + port)
-	log.Println("Swagger documentation available at http://localhost:8080/swagger/index.html")
+	fmt.Println("Server starting on :" + port)
+	fmt.Println("Swagger documentation available at http://localhost:8080/swagger/index.html")
 	log.Fatal(http.ListenAndServe(":"+port, r))
 }
 
